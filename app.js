@@ -79,41 +79,43 @@ const askAgain = function () {
   inquirer
     .prompt(questions)
     .then((answers) => {
+      if (answers.role === "manager") {
+        let manager = new Manager(
+          answers.name,
+          answers.id,
+          answers.email,
+          answers.officeNumber
+        );
+        employees.push(manager);
+        console.log("manager", employees);
+      }
+      if (answers.role === "engineer") {
+        let engineer = new Engineer(
+          answers.name,
+          answers.id,
+          answers.email,
+          answers.github
+        );
+        employees.push(engineer);
+        console.log("engineer", employees);
+      }
+      if (answers.role === "intern") {
+        let intern = new Intern(
+          answers.name,
+          answers.id,
+          answers.email,
+          answers.school
+        );
+        employees.push(intern);
+        console.log("intern", employees);
+      }
       if (!answers.askAgain) {
-        if (answers.role === "manager") {
-          let manager = new Manager(
-            answers.name,
-            answers.id,
-            answers.email,
-            answers.officeNumber
-          );
-          employees.push(manager);
-        }
-        if (answers.role === "engineer") {
-          let engineer = new Engineer(
-            answers.name,
-            answers.id,
-            answers.email,
-            answers.github
-          );
-          employees.push(engineer);
-        }
-        if (answers.role === "intern") {
-          let intern = new Intern(
-            answers.name,
-            answers.id,
-            answers.email,
-            answers.school
-          );
-          employees.push(intern);
-        }
-        console.log("Your team members include:", employees.join(", "));
+        console.log("Your team members include:", employees);
         let employeeHTML = render(employees);
         fs.writeFileSync("./output/team.html", employeeHTML);
-      } else {
-        askAgain();
-        //console.log(globalThis);
+        process.exit(0);
       }
+      askAgain();
     })
     .catch((error) => {
       if (error.isTtyError) {
@@ -124,6 +126,7 @@ const askAgain = function () {
       console.log(error);
     });
 };
+
 askAgain();
 // After the user has input all employees desired, call the `render` function (required
 // above) and pass in an array containing all employee objects; the `render` function will
